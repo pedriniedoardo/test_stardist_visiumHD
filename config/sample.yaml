@@ -1,0 +1,16 @@
+# Sample names
+SAMPLES:
+  ABSINTA_spinalcord_00_045:
+    fastq: '/media/edo/ExtremeSSD/work/HSR/Absinta/spatial_visium/241206_Visium_SpinalCord_Martina/raw_data/Project_AbsintaM_2361_only_sequencing_visium/ABSINTA_spinalcord_00_045'
+    param_img: '--image='
+    value_img: '/media/edo/ExtremeSSD/work/HSR/Absinta/spatial_visium/241206_Visium_SpinalCord_Martina/raw_data/images/VISIUM02_A_S_00045_highres_RGB.tif'
+    param_cytimg: '--cytaimage='
+    value_cytimg: '/media/edo/ExtremeSSD/work/HSR/Absinta/spatial_visium/241206_Visium_SpinalCord_Martina/raw_data/images/VISIUM02_A_S_00045_cytassist.tif'
+    param_align: '--loupe-alignment='
+    value_align: '/media/edo/ExtremeSSD/work/HSR/Absinta/spatial_visium/241206_Visium_SpinalCord_Martina/raw_data/images/V53U05-042-A1.json'
+    param_probe: '--probe-set='
+    value_probe: '/home/edo/Documents/reference/spaceranger/probeset/Visium_Human_Transcriptome_Probe_Set_v2.0_GRCh38-2020-A.csv'
+    param_slide: '--slide='
+    value_slide: 'V53U05-042'
+    param_area: '--area='
+    value_area: 'A1'

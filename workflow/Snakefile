@@ -1,0 +1,52 @@
+# Snakefile of the workflow of scRNAseq_Stanard_COSR_pipeline
+#### import libraries #####
+from snakemake.utils import min_version
+import pandas as pd
+
+#### setup report #####
+# define the configfiles
+configfile: 'config/test.yaml'
+configfile: 'config/config.yaml'
+# configfile: 'config/sample.yaml'
+
+#### Load Sample Paths from CSV #####
+# Load sample metadata
+# df = pd.read_csv("config/samples.csv")
+df = pd.read_csv(config["samples_csv"])
+# Convert to dictionary
+# I extract now, from the sample_path that I have in the df, which comes from the samples.csv from pypette only the folder of the samples. This is because in pypette samples.csv the sample_path is intended to locate the single fastq.gz files, while for cell ranger we need the 'folder' as Edoardo and Aurora have set.
+# That's why I am introducing  the os.path.dirname
+SAMPLES = {
+    row["sample_id"]: {
+        "link_rawImage": row["link_rawImage"],
+        "link_counts": row["link_counts"]
+    }
+    for _, row in df.iterrows()
+}
+
+#### load rules #####
+# load the rules here because the variable SAMPLES needs to be available
+# include the rules
+include: 'rules/test.smk'
+include: 'rules/preprocessing.smk'
+
+#### Pipeline Main Rules #####
+rule test_all:
+    input:
+        rules.test.output.test
+
+# rule download_all:
+#     '''
+#     download the raw files per dataset
+#     '''
+#     input:
+#         expand(rules.downloadData.output.counts_dir,
+#         sample_id=SAMPLES.keys())
+
+rule adata_all:
+    '''
+    generate the adata object per dataset
+    '''
+    input:
+        expand(rules.generateAdata.output.adata,
+        sample_id=SAMPLES.keys())

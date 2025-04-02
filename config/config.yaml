@@ -1,0 +1,18 @@
+# parameters cellranger
+# specify the cellranger verions from the conda
+# env_cellranger: '/home/edo/micromamba/envs/env_cellranger7' 
+env_bin2cell: 'env_bin2cell'
+# env_bin2cell: '../envs/env_bin2cell.yaml'
+
+# local test
+# transcriptome: '/home/edo/Documents/reference/spaceranger/reference/spaceranger_tinyref'
+# transcriptome: '/home/edo/Documents/reference/spaceranger/reference/refdata-gex-GRCh38-2020-A'
+
+# load samples info
+samples_csv: "config/VisiumHD_datasets_small.csv"
+# samples_csv: "../config/VisiumHD_datasets_full.csv"
+
+# specify the run parameters
+out_location: "output/"
+CPU_adata: 8
+RAM_adata: 16
