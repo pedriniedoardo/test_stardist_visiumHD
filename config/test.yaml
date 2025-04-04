@@ -1,6 +1,3 @@
-# Configuration options of cellranger pipeline for the 10X scRNAseq data
-
-# test parameters
-test01: 'resources/test01.txt'
-test02: 'resources/test02.txt'
-test_out: 'resources/test_out.txt'
+test01: "resources/test01.txt"
+test02: "resources/test02.txt"
+test_out: "resources/test_out.txt"
