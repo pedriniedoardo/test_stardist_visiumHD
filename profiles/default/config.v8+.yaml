@@ -1,0 +1,31 @@
+# Instructions here: https://snakemake.readthedocs.io/en/stable/executing/cli.html
+executor: local
+jobs: 3
+conda-prefix: .snakemake/conda
+rerun-incomplete: true
+keep-going: true
+latency-wait: 60
+
+# No wall time information given. This might or might not work on your cluster. If not, specify the resource runtime in your rule or as a reasonable default via --default-resources.
+# TBD
+#
+# default-resources:
+#     mem_mb: 5000
+#     cores: 1
+
+# set-threads:
+#     runCellranger: 8 # To be decided
+#     pureExon: 16
+#     pureIntron: 16
+#     pureAll: 16
+
+# set-resources:
+#     runCellranger: 
+#         mem_mb: 64000 # To be decided
+#         mem_gb: 64
+#     pureExon: 
+#         mem_mb: 64000 # To be decided
+#     pureIntron: 
+#         mem_mb: 64000 # To be decided
+#     pureAll: 
+#         mem_mb: 64000 # To be decided

@@ -1,0 +1,16 @@
+name: env_stardist
+channels:
+  - conda-forge
+dependencies:
+  - ipykernel
+  - matplotlib
+  - numpy
+  - pandas
+  - pillow
+  - python
+  - seaborn
+  - shapely
+  - stardist
+  - tensorflow
+  - tifffile
+

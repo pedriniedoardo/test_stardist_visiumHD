@@ -8,7 +8,7 @@ rule test:
     conda:
         config['env_bin2cell']
     output:
-        test = config['test_out']
+        test = f"{config["out_location"]}{config["test_out"]}"
     log:
         'logs/test/test.log'
     benchmark:

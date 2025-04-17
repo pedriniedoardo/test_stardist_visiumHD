@@ -7,6 +7,10 @@ import pandas as pd
 # define the configfiles
 configfile: 'config/test.yaml'
 configfile: 'config/config.yaml'
+
+# this is needed because the resources for RAM and cpus per rule are defined in the profile
+configfile: "profiles/default/config.v8+.yaml"
+
 # configfile: 'config/sample.yaml'
 
 #### Load Sample Paths from CSV #####
@@ -17,12 +21,15 @@ df = pd.read_csv(config["samples_csv"])
 # I extract now, from the sample_path that I have in the df, which comes from the samples.csv from pypette only the folder of the samples. This is because in pypette samples.csv the sample_path is intended to locate the single fastq.gz files, while for cell ranger we need the 'folder' as Edoardo and Aurora have set.
 # That's why I am introducing  the os.path.dirname
 SAMPLES = {
-    row["sample_id"]: {
-        "link_rawImage": row["link_rawImage"],
-        "link_counts": row["link_counts"]
+    row.sample_id: {
+        "link_rawImage": row.link_rawImage,
+        "link_counts": row.link_counts,
+        "hist_img": row.Histological_image,
+        "species": row.specie_code
     }
-    for _, row in df.iterrows()
+    for row in df.itertuples(index=False)
 }
+
 
 #### load rules #####
 # load the rules here because the variable SAMPLES needs to be available
@@ -43,10 +50,20 @@ rule test_all:
 #         expand(rules.downloadData.output.counts_dir,
 #         sample_id=SAMPLES.keys())
 
-rule adata_all:
+rule run_all:
     '''
     generate the adata object per dataset
     '''
     input:
-        expand(rules.generateAdata.output.adata,
+        # expand(rules.generateAdata.output.adata,
+        # sample_id=SAMPLES.keys()),
+        # expand(rules.runStardist.output.pkl,
+        # sample_id=SAMPLES.keys()),
+        expand(rules.runBin2cell.output.nuclei_grouped_pkl,
+        sample_id=SAMPLES.keys()),
+        expand(rules.runBin2cell.output.nuclei_expanded_pkl,
+        sample_id=SAMPLES.keys()),
+        expand(rules.runBin2cell.output.nuclei_grouped_adata,
+        sample_id=SAMPLES.keys()),
+        expand(rules.runBin2cell.output.nuclei_expanded_adata,
         sample_id=SAMPLES.keys())

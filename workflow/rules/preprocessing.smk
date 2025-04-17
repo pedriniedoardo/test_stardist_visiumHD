@@ -5,16 +5,26 @@ rule downloadData:
         counts_tar = temp(config["out_location"] + "rawData/{sample_id}/binned_outputs.tar.gz"),
         counts_dir= temp(directory(config["out_location"] + "rawData/{sample_id}/binned_outputs")),
         rawImage = temp(config["out_location"] + "rawData/{sample_id}/rawImage.img"),
+        parquet_keep = config["out_location"] + "rawData/{sample_id}/tissue_positions.parquet"
+        # counts_tar = temp(f"{config["out_location"]}rawData/{sample_id}/binned_outputs.tar.gz"),
+        # counts_dir= temp(directory(f"{config["out_location"]}rawData/{sample_id}/binned_outputs")),
+        # rawImage = temp(f"{config["out_location"]}rawData/{sample_id}/rawImage.img")
     log:
         'logs/{sample_id}/downloadData.log'
     benchmark:
         'benchmarks/{sample_id}/downloadData.txt'
+    threads:
+        config["CPU_download"]
+    resources:
+        mem_gb = config["RAM_download"]
     params:
         # Get links from the SAMPLES dictionary (ensure SAMPLES is loaded)
         link_counts = lambda wildcards: SAMPLES[wildcards.sample_id]['link_counts'],
         link_rawImage = lambda wildcards: SAMPLES[wildcards.sample_id]['link_rawImage'],
         # data_count = config["out_location"] + "rawData/{sample_id}/binned_outputs.tar.gz",
         extract_parent_dir = directory(config["out_location"] + "rawData/{sample_id}/"),
+        # extract_parent_dir = directory(f"{config["out_location"]}rawData/{sample_id}/")
+        parquet_input = config["out_location"] + "rawData/{sample_id}/binned_outputs/square_002um/spatial/tissue_positions.parquet"
     shell:
         '''
         # Exit on error, undefined variable, or pipe failure
@@ -37,6 +47,9 @@ rule downloadData:
         echo "Extracting counts data..."
         tar -xzf {output.counts_tar} -C {params.extract_parent_dir}
 
+        # keep the tissue_positions.parquet file to the output directory
+        cp {params.parquet_input} {output.parquet_keep}
+
         echo "Download and extraction for {wildcards.sample_id} finished."
         '''
 
@@ -45,7 +58,7 @@ rule generateAdata:
         seq_data = rules.downloadData.output.counts_dir,
         raw_image = rules.downloadData.output.rawImage
     output:
-        adata=config["out_location"] + "adata/{sample_id}_adata.h5ad"
+        adata = config["out_location"] + "adata/{sample_id}_adata.h5ad"
     conda:
         config["env_bin2cell"]
     log:
@@ -58,3 +71,48 @@ rule generateAdata:
         mem_gb = config["RAM_adata"]
     script:
         "../scripts/00_generate_adata.py"
+
+rule runStardist:
+    input:
+        raw_image = rules.downloadData.output.rawImage
+    output:
+        pkl = config["out_location"] + "stardist/{sample_id}_nuclei_polys.pkl"
+    conda:
+        config["env_stardist"]
+    log:
+        'logs/{sample_id}/runStardist.log'
+    benchmark:
+        'benchmarks/{sample_id}/runStardist.txt'
+    threads:
+        config["CPU_stardist"]
+    resources:
+        mem_gb = config["RAM_stardist"]
+    params:
+        hist_img = lambda wildcards: SAMPLES[wildcards.sample_id]['hist_img']
+    script:
+        "../scripts/01_run_stardist.py"
+
+rule runBin2cell:
+    input:
+        adata = rules.generateAdata.output.adata,
+        parquet = rules.downloadData.output.parquet_keep,
+        stardist = rules.runStardist.output.pkl
+    output:
+        nuclei_grouped_pkl = config["out_location"] + "bin2cell/{sample_id}_nuclei_grouped_geometry.pkl",
+        nuclei_expanded_pkl = config["out_location"] + "bin2cell/{sample_id}_nuclei_expanded_geometry.pkl",
+        nuclei_grouped_adata = config["out_location"] + "bin2cell/{sample_id}_nuclei_grouped_geometry.h5ad",
+        nuclei_expanded_adata = config["out_location"] + "bin2cell/{sample_id}_nuclei_expanded_geometry.h5ad"
+    conda:
+        config["env_bin2cell"]
+    log:
+        'logs/{sample_id}/runBin2cell.log'
+    benchmark:
+        'benchmarks/{sample_id}/runBin2cell.txt'
+    threads:
+        config["CPU_bin2cell"]
+    resources:
+        mem_gb = config["RAM_bin2cell"]
+    params:
+        species = lambda wildcards: SAMPLES[wildcards.sample_id]['species']
+    script:
+        "../scripts/02_run_bin2cell.py"
