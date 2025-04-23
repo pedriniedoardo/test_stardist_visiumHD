@@ -3,6 +3,8 @@
 # env_cellranger: '/home/edo/micromamba/envs/env_cellranger7' 
 env_bin2cell: 'env_bin2cell'
 env_stardist: 'env_stardist'
+env_RCTD: 'env_RCTD_test'
+
 # env_bin2cell: '../envs/env_bin2cell.yaml'
 
 # local test
@@ -28,3 +30,6 @@ RAM_stardist: 20
 
 CPU_bin2cell: 16
 RAM_bin2cell: 20
+
+CPU_RCTD: 16
+RAM_RCTD: 20

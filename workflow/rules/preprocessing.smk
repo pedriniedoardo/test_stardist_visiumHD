@@ -116,3 +116,30 @@ rule runBin2cell:
         species = lambda wildcards: SAMPLES[wildcards.sample_id]['species']
     script:
         "../scripts/02_run_bin2cell.py"
+
+rule runRCTD:
+    input:
+        ref = lambda wildcards: SAMPLES[wildcards.sample_id]['RCTD_ref'],
+        # nuclei_grouped_adata = rules.runBin2cell.output.nuclei_grouped_adata,
+        # nuclei_expanded_adata = rules.runBin2cell.output.nuclei_grouped_adata
+        # nuclei_grouped_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/pipeline_01/output/bin2cell/Mouse_Embryo_nuclei_grouped_geometry.h5ad",
+        # nuclei_expanded_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/pipeline_01/output/bin2cell/Mouse_Embryo_nuclei_expanded_geometry.h5ad"
+        # keep this only for testing
+        nuclei_grouped_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped_tiny.rds",
+        nuclei_expanded_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei_tiny.rds"
+    output:
+        csv_filters = config["out_location"] + "RCTD/{sample_id}_RCTD_filters.csv"
+    conda:
+        config["env_RCTD"]
+    log:
+        'logs/{sample_id}/runRCTD.log'
+    benchmark:
+        'benchmarks/{sample_id}/runRCTD.txt'
+    threads:
+        config["CPU_RCTD"]
+    resources:
+        mem_gb = config["RAM_RCTD"]
+    params:
+        # ref = lambda wildcards: SAMPLES[wildcards.sample_id]['RCTD_ref']
+    script:
+        "../scripts/03_run_RCTD.R"

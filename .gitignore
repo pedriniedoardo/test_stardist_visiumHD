@@ -1,5 +1,6 @@
 # files
 .panoptes.db
+.Rhistory
 
 # folders
 .snakemake/
@@ -8,3 +9,5 @@ logs/
 data/
 benchmarks/
 __pycache__/
+.Rproj.user/
+renv/

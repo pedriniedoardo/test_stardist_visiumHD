@@ -1,9 +1,6 @@
 import numpy as np
 import pandas as pd
-import scanpy as sc
-import geopandas as gpd
-from stardist.models import StarDist2D
-from shapely.geometry import Polygon, Point
+# from stardist.models import StarDist2D
 
 def custom_normalize(x, pmin=3, pmax=99.8, axis=None, clip=False, eps=1e-20, dtype=np.float32):
     """Percentile-based image normalization."""
@@ -14,6 +11,7 @@ def custom_normalize(x, pmin=3, pmax=99.8, axis=None, clip=False, eps=1e-20, dty
 
 
 def normalize_mi_ma(x, mi, ma, clip=False, eps=1e-20, dtype=np.float32):
+
     if dtype is not None:
         x   = x.astype(dtype,copy=False)
         mi  = dtype(mi) if np.isscalar(mi) else mi.astype(dtype,copy=False)
@@ -32,11 +30,17 @@ def normalize_mi_ma(x, mi, ma, clip=False, eps=1e-20, dtype=np.float32):
     return x
 
 def remove_destripe_artifacts(adata):
+    """ """
+
     idx = adata.X.sum(axis=1).A1 == float('inf')
     print('removing '+str(idx.sum())+' dots')
     return adata[idx==False]
 
 def nuclei_detection(polys, tissue_position_file, adata):
+    """ """
+    import geopandas as gpd
+    from shapely.geometry import Polygon, Point
+
     # Creating a list to store Polygon geometries
     geometries = []
 
@@ -110,6 +114,9 @@ def nuclei_detection(polys, tissue_position_file, adata):
 
 
 def add_obs_variables(adata, unit, species='Hs'):
+    """ """
+    import scanpy as sc
+
     x = adata.copy()
     x.obs['counts_per_' + unit] = np.sum(x.X, axis = 1)
     x.obs['features_per_' + unit] = np.sum(x.X >0, axis = 1)
@@ -130,6 +137,8 @@ def add_obs_variables(adata, unit, species='Hs'):
     return x
 
 def max_diameter(polygon):
+    """ """
+
     from scipy.spatial.distance import pdist
     # Extract coordinates of the exterior boundary
     coords = np.array(polygon.exterior.coords)
@@ -138,6 +147,8 @@ def max_diameter(polygon):
     return np.max(distances)
 
 def cell_geometry(point_geometries):
+    """ """
+    from shapely.geometry import Polygon, Point
     
     from scipy.spatial import ConvexHull
     # Transform from point geometry to coordinates

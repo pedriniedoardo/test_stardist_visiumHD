@@ -1,0 +1,43 @@
+name: env_RCTD_test
+
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+
+dependencies:
+  # --- Core ---
+  - r-base
+  - make
+
+  # --- R Packages directly from Conda ---
+  - r-seurat
+  - bioconductor-rhdf5
+  - r-tidyverse
+  - r-matrix
+
+  # --- Dependencies for R packages ---
+  - hdf5
+
+  # --- Tools to install spacexr from GitHub ---
+  - r-remotes
+  - git
+
+  # --- Optional: Build tools (might be needed for spacexr or dependencies) ---
+  # Uncomment if installation fails; conda-forge usually handles this well
+  # - {{ compiler('c') }}       # C compiler
+  # - {{ compiler('cxx') }}      # C++ compiler
+
+# --------------------------------------------------------------------------
+# IMPORTANT: spacexr Installation Step
+# --------------------------------------------------------------------------
+# The 'spacexr' and 'schard' package are not available on standard Conda channels.
+# You must install it manually from GitHub AFTER creating this environment.
+#
+# After creating the environment (`conda env create -f environment.yaml`):
+# 1. Activate the environment: `conda activate env_RCTD_test`
+# 2. Run R and install spacexr:
+#    R -e "remotes::install_github('dmcable/spacexr')"
+# 3. Run R and install schard:
+#    R -e "remotes::install_github('cellgeni/schard')"
+# --------------------------------------------------------------------------

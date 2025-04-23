@@ -25,7 +25,8 @@ SAMPLES = {
         "link_rawImage": row.link_rawImage,
         "link_counts": row.link_counts,
         "hist_img": row.Histological_image,
-        "species": row.specie_code
+        "species": row.specie_code,
+        "RCTD_ref": row.Ref_dataset_RCTD
     }
     for row in df.itertuples(index=False)
 }
@@ -50,6 +51,14 @@ rule test_all:
 #         expand(rules.downloadData.output.counts_dir,
 #         sample_id=SAMPLES.keys())
 
+rule run_RCTD:
+    '''
+    generate the adata object per dataset
+    '''
+    input:
+        expand(rules.runRCTD.output.csv_filters,
+        sample_id=SAMPLES.keys())
+
 rule run_all:
     '''
     generate the adata object per dataset
@@ -66,4 +75,6 @@ rule run_all:
         expand(rules.runBin2cell.output.nuclei_grouped_adata,
         sample_id=SAMPLES.keys()),
         expand(rules.runBin2cell.output.nuclei_expanded_adata,
-        sample_id=SAMPLES.keys())
+        sample_id=SAMPLES.keys()),
+        # expand(rules.runRCTD.output.csv_filters,
+        # sample_id=SAMPLES.keys())
