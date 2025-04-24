@@ -122,8 +122,6 @@ rule runRCTD:
         ref = lambda wildcards: SAMPLES[wildcards.sample_id]['RCTD_ref'],
         # nuclei_grouped_adata = rules.runBin2cell.output.nuclei_grouped_adata,
         # nuclei_expanded_adata = rules.runBin2cell.output.nuclei_grouped_adata
-        # nuclei_grouped_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/pipeline_01/output/bin2cell/Mouse_Embryo_nuclei_grouped_geometry.h5ad",
-        # nuclei_expanded_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/pipeline_01/output/bin2cell/Mouse_Embryo_nuclei_expanded_geometry.h5ad"
         # keep this only for testing
         nuclei_grouped_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped_tiny.rds",
         nuclei_expanded_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei_tiny.rds"
@@ -143,3 +141,29 @@ rule runRCTD:
         # ref = lambda wildcards: SAMPLES[wildcards.sample_id]['RCTD_ref']
     script:
         "../scripts/03_run_RCTD.R"
+
+rule runAdataMerge:
+    input:
+        # csv_filters = rules.runRCTD.output.csv_filters,
+        # nuclei_grouped_adata = rules.runBin2cell.output.nuclei_grouped_adata,
+        # nuclei_expanded_adata = rules.runBin2cell.output.nuclei_grouped_adata
+        csv_filters = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_RCTD_filters.csv",
+        nuclei_grouped_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped.h5ad",
+        nuclei_expanded_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei.h5ad"
+
+    output:
+        merged_adata = config["out_location"] + "adata/{sample_id}_adata_final.h5ad",
+    conda:
+        config["env_bin2cell"]
+    log:
+        'logs/{sample_id}/runAdataMerge.log'
+    benchmark:
+        'benchmarks/{sample_id}/runAdataMerge.txt'
+    threads:
+        config["CPU_AdataMerge"]
+    resources:
+        mem_gb = config["RAM_AdataMerge"]
+    params:
+        # ref = lambda wildcards: SAMPLES[wildcards.sample_id]['RCTD_ref']
+    script:
+        "../scripts/04_run_mergeAdata.py"

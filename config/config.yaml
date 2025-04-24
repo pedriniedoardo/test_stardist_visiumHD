@@ -33,3 +33,6 @@ RAM_bin2cell: 20
 
 CPU_RCTD: 16
 RAM_RCTD: 20
+
+CPU_AdataMerge: 8
+RAM_AdataMerge: 16

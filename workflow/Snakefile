@@ -59,6 +59,14 @@ rule run_RCTD:
         expand(rules.runRCTD.output.csv_filters,
         sample_id=SAMPLES.keys())
 
+rule run_mergeAdata:
+    '''
+    generate the adata object per dataset
+    '''
+    input:
+        expand(rules.runAdataMerge.output.merged_adata,
+        sample_id=SAMPLES.keys())
+
 rule run_all:
     '''
     generate the adata object per dataset
