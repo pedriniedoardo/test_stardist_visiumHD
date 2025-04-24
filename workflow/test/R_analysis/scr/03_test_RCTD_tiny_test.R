@@ -40,11 +40,11 @@ classify_type = function(RCTD_results_nuclei, RCTD_results_cells) {
                  rownames(RCTD_results_cells))
   df_nuclei = RCTD_results_nuclei[cg,]
   df_cells = RCTD_results_cells[cg,]
-  feature_type = ifelse(df_nuclei$first_type == df_cells$first_type, "cells", "nuclei")
+  feature_type = ifelse(df_nuclei$first_type == as.character(df_cells$first_type), "cells", "nuclei")
   feature_type[df_nuclei$spot_class != "singlet" & df_cells$spot_class != "singlet"] = "rejected"
   feature_type[df_nuclei$spot_class == "singlet" & df_cells$spot_class != "singlet"] = "nuclei"
   feature_type[df_nuclei$spot_class != "singlet" & df_cells$spot_class == "singlet"] = "cells"
-  feature_class = ifelse(feature_type=="cells", df_cells$first_type, df_nuclei$first_type)
+  feature_class = ifelse(feature_type=="cells", as.character(df_cells$first_type), as.character(df_nuclei$first_type))
   feature_class[feature_type=="rejected"] = "rejected"
   data.frame(type=feature_type, class=feature_class, row.names = cg)
 }
@@ -94,7 +94,8 @@ write.csv(RCTD_cells$results_df,"../../../../data/Mouse_Embryo/Mouse_Embryo_RCTD
 # RCTD_cells = read.csv(paste0(path, "RCTD_cells.csv"), row.names = "X")
 # RCTD_nuclei = read.csv(paste0(path, "RCTD_nuclei.csv"), row.names = "X")
 
-df_class_RCTD = classify_type(RCTD_results_nuclei = RCTD_nuclei$results_df, RCTD_results_cells = RCTD_cells$results_df) 
+df_class_RCTD <- classify_type(RCTD_results_nuclei = RCTD_nuclei$results_df, RCTD_results_cells = RCTD_cells$results_df) 
+# classify_type(RCTD_results_nuclei = RCTD_nuclei$results_df, RCTD_results_cells = RCTD_nuclei$results_df) 
 table(df_class_RCTD$type)    # vedo quante ok e quante rejected da filtri RCTD
 table(df_class_RCTD$class)   # number cell types detected
 

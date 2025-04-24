@@ -46,11 +46,11 @@ classify_type = function(RCTD_results_nuclei, RCTD_results_cells) {
                  rownames(RCTD_results_cells))
   df_nuclei = RCTD_results_nuclei[cg,]
   df_cells = RCTD_results_cells[cg,]
-  feature_type = ifelse(df_nuclei$first_type == df_cells$first_type, "cells", "nuclei")
+  feature_type = ifelse(df_nuclei$first_type == as.character(df_cells$first_type), "cells", "nuclei")
   feature_type[df_nuclei$spot_class != "singlet" & df_cells$spot_class != "singlet"] = "rejected"
   feature_type[df_nuclei$spot_class == "singlet" & df_cells$spot_class != "singlet"] = "nuclei"
   feature_type[df_nuclei$spot_class != "singlet" & df_cells$spot_class == "singlet"] = "cells"
-  feature_class = ifelse(feature_type=="cells", df_cells$first_type, df_nuclei$first_type)
+  feature_class = ifelse(feature_type=="cells", as.character(df_cells$first_type), as.character(df_nuclei$first_type))
   feature_class[feature_type=="rejected"] = "rejected"
   data.frame(type=feature_type, class=feature_class, row.names = cg)
 }
