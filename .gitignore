@@ -1,6 +1,7 @@
 # files
 .panoptes.db
 .Rhistory
+.~lock*
 
 # folders
 .snakemake/
