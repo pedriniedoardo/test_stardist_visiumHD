@@ -2,11 +2,39 @@
 # == load libraries ==
 # ======================================================================
 
+import matplotlib.image
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import matplotlib.patches as patches
+from matplotlib.colors import ListedColormap
+from stardist import random_label_cmap, _draw_polygons
 import pandas as pd
-import scanpy as sc
 import numpy as np
-from scipy.sparse import vstack
+import scanpy as sc
+from scipy import sparse
+import bin2cell as b2c
+from stardist.models import StarDist2D
+from csbdeep.utils import normalize
+import cv2
+import os
+import pickle
+import anndata
+import geopandas as gpd
+from tifffile import imread, imwrite
+from stardist.models import StarDist2D
+from shapely.geometry import Polygon, Point
+import seaborn as sns
+import scrublet as scr
+#pip install celltypist
+import celltypist
+from celltypist import models
+import itertools
 import anndata as ad
+from pandas.api.types import CategoricalDtype
+
+from sklearn.cluster import KMeans
+from sklearn.neighbors import NearestNeighbors
+from sklearn.impute import SimpleImputer
 
 
 # ======================================================================

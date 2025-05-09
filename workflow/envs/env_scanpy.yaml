@@ -1,0 +1,26 @@
+name: env_scanpy_test
+
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+
+dependencies:
+  - python
+  - stardist
+  - pandas
+  - scanpy
+  - scipy
+  - opencv
+  - geopandas
+  - tifffile
+  - scrublet
+  - tensorflow
+  - matplotlib
+  - pip
+  - ipykernel
+  - ipywidgets
+
+  - pip:
+      - bin2cell
+      - celltypist

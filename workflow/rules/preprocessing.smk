@@ -123,8 +123,8 @@ rule runRCTD:
         # nuclei_grouped_adata = rules.runBin2cell.output.nuclei_grouped_adata,
         # nuclei_expanded_adata = rules.runBin2cell.output.nuclei_grouped_adata
         # keep this only for testing
-        nuclei_grouped_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped_tiny.rds",
-        nuclei_expanded_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei_tiny.rds"
+        nuclei_grouped_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped_tiny.rds",
+        nuclei_expanded_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei_tiny.rds"
     output:
         csv_filters = config["out_location"] + "RCTD/{sample_id}_RCTD_filters.csv"
     conda:
@@ -147,9 +147,10 @@ rule runAdataMerge:
         # csv_filters = rules.runRCTD.output.csv_filters,
         # nuclei_grouped_adata = rules.runBin2cell.output.nuclei_grouped_adata,
         # nuclei_expanded_adata = rules.runBin2cell.output.nuclei_grouped_adata
-        csv_filters = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_RCTD_filters.csv",
-        nuclei_grouped_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped.h5ad",
-        nuclei_expanded_adata = "/media/edo/ExtremeSSD/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei.h5ad"
+        # keep this only for testing
+        csv_filters = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_RCTD_filters.csv",
+        nuclei_grouped_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped.h5ad",
+        nuclei_expanded_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei.h5ad"
 
     output:
         merged_adata = config["out_location"] + "adata/{sample_id}_adata_final.h5ad",

@@ -4,6 +4,7 @@
 env_bin2cell: 'env_bin2cell'
 env_stardist: 'env_stardist'
 env_RCTD: 'env_RCTD_test'
+env_scanpy: 'env_scanpy_test'
 
 # env_bin2cell: '../envs/env_bin2cell.yaml'
 

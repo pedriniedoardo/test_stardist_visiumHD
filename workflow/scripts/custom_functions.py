@@ -181,3 +181,56 @@ def cell_geometry(point_geometries):
     polygon = Polygon(boundary_points_sorted_clockwise)
     
     return polygon
+
+def up_to_pca(adata, n_top_genes=3000, from_raw=True):
+    """ """
+    import scanpy as sc
+
+    print('Top genes: '+str(n_top_genes))
+    if from_raw:
+        x = adata.raw.to_adata()
+    else:
+        x = adata.copy()
+        sc.pp.normalize_total(x)
+        sc.pp.log1p(x)
+    if n_top_genes == 0:
+        sc.pp.highly_variable_genes(x, min_mean=0.0125, max_mean=3, min_disp=-2)
+    else:
+        sc.pp.highly_variable_genes(x, n_top_genes=n_top_genes)
+    sc.pl.highly_variable_genes(x)
+    x.raw = x
+    x = x[:, x.var.highly_variable]
+    sc.pp.scale(x, max_value = 10)
+    sc.tl.pca(x)
+    sc.pl.pca_variance_ratio(x, n_pcs=50)
+    return x
+
+def create_palette_matplotlib(n, white=True):
+    """ """
+    import matplotlib.pyplot as plt
+
+    cmap = plt.get_cmap('hsv')  # Puoi cambiare 'hsv' con qualsiasi colormap disponibile in matplotlib
+    colors = [cmap(i / n) for i in range(n)]
+    if(white): colors = [(1, 1, 1, 1)] + colors
+    return colors #ListedColormap(colors)
+
+def from_pca_to_leiden(adata, n_neighbors = 20, n_pcs = 15, resolution = 1, plot_spatial=True):
+    """ """
+    import scanpy as sc
+    
+    print('Neighbors: '+str(n_neighbors))
+    print('PCA n: '+str(n_pcs))
+    print('resolution: '+str(resolution))
+    x = adata.copy()
+    sc.pp.neighbors(x, n_neighbors = n_neighbors, n_pcs = n_pcs)
+    sc.tl.umap(x)
+    sc.tl.leiden(x, flavor="igraph", resolution= resolution)
+    n_clusters = len(np.unique(x.obs.leiden))
+    x.uns["leiden_colors"] = create_palette_matplotlib(len(x.obs.leiden.cat.categories), white=False)
+    sc.pl.umap(x, color=["leiden"], legend_loc = 'on data')
+    if plot_spatial:
+    	sc.pl.spatial(x, color="leiden")
+    return x
+
+
+

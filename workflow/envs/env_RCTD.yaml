@@ -23,11 +23,6 @@ dependencies:
   - r-remotes
   - git
 
-  # --- Optional: Build tools (might be needed for spacexr or dependencies) ---
-  # Uncomment if installation fails; conda-forge usually handles this well
-  # - {{ compiler('c') }}       # C compiler
-  # - {{ compiler('cxx') }}      # C++ compiler
-
 # --------------------------------------------------------------------------
 # IMPORTANT: spacexr Installation Step
 # --------------------------------------------------------------------------
