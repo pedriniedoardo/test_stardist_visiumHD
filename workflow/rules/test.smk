@@ -13,10 +13,6 @@ rule test:
         'logs/test/test.log'
     benchmark:
         'benchmarks/test/test.txt'
-    resources:
-        mem_mb = 500,
-        cpus = 1
-    threads: 1
     params:
         annotations = config['test02']
     shell:

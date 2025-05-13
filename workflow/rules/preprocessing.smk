@@ -13,10 +13,6 @@ rule downloadData:
         'logs/{sample_id}/downloadData.log'
     benchmark:
         'benchmarks/{sample_id}/downloadData.txt'
-    threads:
-        config["CPU_download"]
-    resources:
-        mem_gb = config["RAM_download"]
     params:
         # Get links from the SAMPLES dictionary (ensure SAMPLES is loaded)
         link_counts = lambda wildcards: SAMPLES[wildcards.sample_id]['link_counts'],
@@ -65,10 +61,6 @@ rule generateAdata:
         'logs/{sample_id}/generateAdata.log'
     benchmark:
         'benchmarks/{sample_id}/generateAdata.txt'
-    threads:
-        config["CPU_adata"]
-    resources:
-        mem_gb = config["RAM_adata"]
     script:
         "../scripts/00_generate_adata.py"
 
@@ -83,10 +75,6 @@ rule runStardist:
         'logs/{sample_id}/runStardist.log'
     benchmark:
         'benchmarks/{sample_id}/runStardist.txt'
-    threads:
-        config["CPU_stardist"]
-    resources:
-        mem_gb = config["RAM_stardist"]
     params:
         hist_img = lambda wildcards: SAMPLES[wildcards.sample_id]['hist_img']
     script:
@@ -108,10 +96,6 @@ rule runBin2cell:
         'logs/{sample_id}/runBin2cell.log'
     benchmark:
         'benchmarks/{sample_id}/runBin2cell.txt'
-    threads:
-        config["CPU_bin2cell"]
-    resources:
-        mem_gb = config["RAM_bin2cell"]
     params:
         species = lambda wildcards: SAMPLES[wildcards.sample_id]['species']
     script:
@@ -123,8 +107,8 @@ rule runRCTD:
         # nuclei_grouped_adata = rules.runBin2cell.output.nuclei_grouped_adata,
         # nuclei_expanded_adata = rules.runBin2cell.output.nuclei_grouped_adata
         # keep this only for testing
-        nuclei_grouped_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped_tiny.rds",
-        nuclei_expanded_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei_tiny.rds"
+        nuclei_grouped_adata = "/media/edo/Internal01/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped_tiny.rds",
+        nuclei_expanded_adata = "/media/edo/Internal01/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei_tiny.rds"
     output:
         csv_filters = config["out_location"] + "RCTD/{sample_id}_RCTD_filters.csv"
     conda:
@@ -133,10 +117,6 @@ rule runRCTD:
         'logs/{sample_id}/runRCTD.log'
     benchmark:
         'benchmarks/{sample_id}/runRCTD.txt'
-    threads:
-        config["CPU_RCTD"]
-    resources:
-        mem_gb = config["RAM_RCTD"]
     params:
         # ref = lambda wildcards: SAMPLES[wildcards.sample_id]['RCTD_ref']
     script:
@@ -148,9 +128,9 @@ rule runAdataMerge:
         # nuclei_grouped_adata = rules.runBin2cell.output.nuclei_grouped_adata,
         # nuclei_expanded_adata = rules.runBin2cell.output.nuclei_grouped_adata
         # keep this only for testing
-        csv_filters = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_RCTD_filters.csv",
-        nuclei_grouped_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped.h5ad",
-        nuclei_expanded_adata = "/media/edo/Elements/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei.h5ad"
+        csv_filters = "/media/edo/Internal01/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_RCTD_filters.csv",
+        nuclei_grouped_adata = "/media/edo/Internal01/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_nuclei_grouped.h5ad",
+        nuclei_expanded_adata = "/media/edo/Internal01/training/test_snakemake/test_cosr_spatial/data/Mouse_Embryo/Mouse_Embryo_expanded_nuclei.h5ad"
 
     output:
         merged_adata = config["out_location"] + "adata/{sample_id}_adata_final.h5ad",
@@ -160,10 +140,6 @@ rule runAdataMerge:
         'logs/{sample_id}/runAdataMerge.log'
     benchmark:
         'benchmarks/{sample_id}/runAdataMerge.txt'
-    threads:
-        config["CPU_AdataMerge"]
-    resources:
-        mem_gb = config["RAM_AdataMerge"]
     params:
         # ref = lambda wildcards: SAMPLES[wildcards.sample_id]['RCTD_ref']
     script:
